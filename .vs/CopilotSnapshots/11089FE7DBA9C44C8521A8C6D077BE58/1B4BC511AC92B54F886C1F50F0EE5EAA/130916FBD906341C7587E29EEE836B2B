@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+<hr />
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white shadow">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-users"></i> Total Donors</h5>
+                <h2>@ViewBag.TotalDonors</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-user-injured"></i> Total Patients</h5>
+                <h2>@ViewBag.TotalPatients</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white shadow">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-clock"></i> Pending Requests</h5>
+                <h2>@ViewBag.PendingRequests</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-danger text-white shadow">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-tint"></i> Blood Units</h5>
+                <h2>@ViewBag.TotalBloodUnits</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h4>Quick Actions</h4>
+        <div class="list-group">
+            <a asp-action="ManageDonors" class="list-group-item list-group-item-action">
+                <i class="fas fa-user-check"></i> Manage Donors
+                @if (ViewBag.PendingDonors > 0)
+                {
+                    <span class="badge bg-warning float-end">@ViewBag.PendingDonors Pending</span>
+                }
+            </a>
+            <a asp-action="BloodRequests" class="list-group-item list-group-item-action">
+                <i class="fas fa-file-medical"></i> Blood Requests
+                @if (ViewBag.PendingRequests > 0)
+                {
+                    <span class="badge bg-warning float-end">@ViewBag.PendingRequests Pending</span>
+                }
+            </a>
+            <a asp-action="BloodInventory" class="list-group-item list-group-item-action">
+                <i class="fas fa-box"></i> Blood Inventory
+            </a>
+            <a asp-action="RecordDonation" class="list-group-item list-group-item-action">
+                <i class="fas fa-plus-circle"></i> Record New Donation
+            </a>
+            <a asp-action="DonationCamps" class="list-group-item list-group-item-action">
+                <i class="fas fa-calendar-alt"></i> Donation Camps
+            </a>
+            <a asp-action="ManageUsers" class="list-group-item list-group-item-action">
+                <i class="fas fa-users-cog"></i> Manage Users
+            </a>
+            <a asp-action="Reports" class="list-group-item list-group-item-action">
+                <i class="fas fa-chart-bar"></i> View Reports
+            </a>
+        </div>
+    </div>
+</div>

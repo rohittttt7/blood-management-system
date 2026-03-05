@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Request Blood";
+}
+
+<h2><i class="fas fa-plus-circle"></i> Request Blood</h2>
+<hr />
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">New Blood Request</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="RequestBlood" method="post">
+                    <div class="mb-3">
+                        <label for="bloodGroup" class="form-label">Blood Group Required</label>
+                        <select name="bloodGroup" id="bloodGroup" class="form-select" required>
+                            <option value="">Select Blood Group</option>
+                            <option value="A+" @(ViewBag.PatientBloodGroup == "A+" ? "selected" : "")>A+</option>
+                            <option value="A-" @(ViewBag.PatientBloodGroup == "A-" ? "selected" : "")>A-</option>
+                            <option value="B+" @(ViewBag.PatientBloodGroup == "B+" ? "selected" : "")>B+</option>
+                            <option value="B-" @(ViewBag.PatientBloodGroup == "B-" ? "selected" : "")>B-</option>
+                            <option value="O+" @(ViewBag.PatientBloodGroup == "O+" ? "selected" : "")>O+</option>
+                            <option value="O-" @(ViewBag.PatientBloodGroup == "O-" ? "selected" : "")>O-</option>
+                            <option value="AB+" @(ViewBag.PatientBloodGroup == "AB+" ? "selected" : "")>AB+</option>
+                            <option value="AB-" @(ViewBag.PatientBloodGroup == "AB-" ? "selected" : "")>AB-</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="unitsRequired" class="form-label">Units Required</label>
+                        <input type="number" name="unitsRequired" id="unitsRequired" class="form-control" min="1" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="reason" class="form-label">Reason for Request</label>
+                        <textarea name="reason" id="reason" class="form-control" rows="3"></textarea>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="isEmergency" id="isEmergency" class="form-check-input" value="true" />
+                        <label for="isEmergency" class="form-check-label">
+                            <strong class="text-danger">This is an Emergency Request</strong>
+                        </label>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Your request will be reviewed by the admin. Emergency requests are processed with priority.
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-paper-plane"></i> Submit Request
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

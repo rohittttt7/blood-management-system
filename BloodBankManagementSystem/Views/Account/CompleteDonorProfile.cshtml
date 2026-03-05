@@ -1,0 +1,70 @@
+@model BloodBankManagementSystem.Models.ViewModels.DonorRegistrationViewModel
+@{
+    ViewData["Title"] = "Complete Donor Profile";
+    var userId = ViewBag.UserId;
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-danger text-white">
+                <h3 class="mb-0"><i class="fas fa-hand-holding-heart"></i> Complete Donor Profile</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="CompleteDonorProfile" asp-route-userId="@userId" method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="BloodGroup" class="form-label"></label>
+                        <select asp-for="BloodGroup" class="form-select">
+                            <option value="">Select Blood Group</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                        <span asp-validation-for="BloodGroup" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Age" class="form-label"></label>
+                        <input asp-for="Age" class="form-control" type="number" />
+                        <span asp-validation-for="Age" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Weight" class="form-label"></label>
+                        <input asp-for="Weight" class="form-control" type="number" step="0.1" />
+                        <span asp-validation-for="Weight" class="text-danger"></span>
+                        <small class="form-text text-muted">Weight in kg</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MedicalHistory" class="form-label"></label>
+                        <textarea asp-for="MedicalHistory" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="MedicalHistory" class="text-danger"></span>
+                        <small class="form-text text-muted">Any medical conditions, allergies, or medications</small>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>Note:</strong> Your profile will be reviewed by the admin before approval.
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-check"></i> Complete Registration
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

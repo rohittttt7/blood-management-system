@@ -1,0 +1,73 @@
+@model IEnumerable<BloodBankManagementSystem.Models.Donor>
+@{
+    ViewData["Title"] = "Manage Donors";
+}
+
+<h2><i class="fas fa-users"></i> Manage Donors</h2>
+<hr />
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-danger">
+            <tr>
+                <th>Donor Name</th>
+                <th>Blood Group</th>
+                <th>Age</th>
+                <th>Weight</th>
+                <th>Total Donations</th>
+                <th>Last Donation</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var donor in Model)
+            {
+                <tr>
+                    <td>@donor.User?.FullName</td>
+                    <td><span class="badge bg-danger">@donor.BloodGroup</span></td>
+                    <td>@donor.Age</td>
+                    <td>@donor.Weight kg</td>
+                    <td>@donor.TotalDonations</td>
+                    <td>@(donor.LastDonationDate?.ToString("dd MMM yyyy") ?? "Never")</td>
+                    <td>
+                        @if (donor.Status == "Approved")
+                        {
+                            <span class="badge bg-success">@donor.Status</span>
+                        }
+                        else if (donor.Status == "Pending")
+                        {
+                            <span class="badge bg-warning">@donor.Status</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">@donor.Status</span>
+                        }
+                    </td>
+                    <td>
+                        @if (donor.Status == "Pending")
+                        {
+                            <form asp-action="ApproveDonor" asp-route-id="@donor.DonorId" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    <i class="fas fa-check"></i> Approve
+                                </button>
+                            </form>
+                            <form asp-action="RejectDonor" asp-route-id="@donor.DonorId" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> No donors found.
+    </div>
+}

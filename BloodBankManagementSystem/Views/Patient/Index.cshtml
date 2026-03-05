@@ -1,0 +1,61 @@
+@{
+    ViewData["Title"] = "Patient Dashboard";
+    var patient = ViewBag.Patient as BloodBankManagementSystem.Models.Patient;
+}
+
+<h2><i class="fas fa-user-injured"></i> Patient Dashboard</h2>
+<hr />
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-danger text-white shadow">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-tint"></i> Your Blood Group</h5>
+                <h2>@patient?.BloodGroup</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-primary text-white shadow">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-file-medical"></i> Total Requests</h5>
+                <h2>@ViewBag.TotalRequests</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-white shadow">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-clock"></i> Pending Requests</h5>
+                <h2>@ViewBag.PendingRequests</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h4><i class="fas fa-tasks"></i> Quick Actions</h4>
+        <div class="list-group">
+            <a asp-action="RequestBlood" class="list-group-item list-group-item-action">
+                <i class="fas fa-plus-circle"></i> Request Blood
+            </a>
+            <a asp-action="MyRequests" class="list-group-item list-group-item-action">
+                <i class="fas fa-list"></i> My Blood Requests
+                @if (ViewBag.PendingRequests > 0)
+                {
+                    <span class="badge bg-warning float-end">@ViewBag.PendingRequests Pending</span>
+                }
+            </a>
+            <a asp-action="BloodAvailability" class="list-group-item list-group-item-action">
+                <i class="fas fa-tint"></i> Check Blood Availability
+            </a>
+            <a asp-action="SearchDonors" class="list-group-item list-group-item-action">
+                <i class="fas fa-search"></i> Search Blood Donors
+            </a>
+            <a asp-action="MyProfile" class="list-group-item list-group-item-action">
+                <i class="fas fa-user"></i> My Profile
+            </a>
+        </div>
+    </div>
+</div>

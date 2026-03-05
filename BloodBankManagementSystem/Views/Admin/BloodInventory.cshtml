@@ -1,0 +1,39 @@
+@model IEnumerable<BloodBankManagementSystem.Models.BloodGroup>
+@{
+    ViewData["Title"] = "Blood Inventory";
+}
+
+<h2><i class="fas fa-box"></i> Blood Inventory Management</h2>
+<hr />
+
+<div class="row">
+    @foreach (var blood in Model)
+    {
+        <div class="col-md-3 mb-3">
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white text-center">
+                    <h3>@blood.BloodType</h3>
+                </div>
+                <div class="card-body">
+                    <h4 class="text-center">@blood.AvailableUnits Units</h4>
+                    @if (blood.AvailableUnits < 5)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i> Low Stock!
+                        </div>
+                    }
+                    <small class="text-muted">Last Updated: @blood.LastUpdated.ToString("dd MMM yyyy HH:mm")</small>
+                    
+                    <form asp-action="UpdateInventory" asp-route-id="@blood.BloodGroupId" method="post" class="mt-3">
+                        <div class="input-group">
+                            <input type="number" name="units" class="form-control" value="@blood.AvailableUnits" min="0" required />
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-save"></i> Update
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>
