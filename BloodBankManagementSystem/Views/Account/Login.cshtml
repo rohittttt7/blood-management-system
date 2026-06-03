@@ -10,7 +10,7 @@
                 <div class="card-header bg-gradient-primary text-white text-center py-4">
                     <i class="fas fa-sign-in-alt fa-3x mb-3"></i>
                     <h3 class="mb-0 fw-bold">Welcome Back</h3>
-                    <p class="mb-0 opacity-75">Login to your account</p>
+                    <p class="mb-0 opacity-75">Admin, employee, and patient access</p>
                 </div>
                 <div class="card-body p-5">
                     <form asp-action="Login" method="post">
@@ -63,7 +63,7 @@
                         <div class="d-flex align-items-start">
                             <i class="fas fa-info-circle fa-2x me-3 mt-1"></i>
                             <div>
-                                <strong class="d-block mb-2">Default Admin Credentials:</strong>
+                                <strong class="d-block mb-2">Default Staff Credentials:</strong>
                                 <div class="mb-1">
                                     <i class="fas fa-envelope me-2"></i>
                                     <code class="bg-white px-2 py-1 rounded">admin@bloodbank.com</code>
@@ -71,6 +71,14 @@
                                 <div>
                                     <i class="fas fa-key me-2"></i>
                                     <code class="bg-white px-2 py-1 rounded">Admin@123</code>
+                                </div>
+                                <div class="mt-2">
+                                    <i class="fas fa-envelope me-2"></i>
+                                    <code class="bg-white px-2 py-1 rounded">employee@bloodbank.com</code>
+                                </div>
+                                <div>
+                                    <i class="fas fa-key me-2"></i>
+                                    <code class="bg-white px-2 py-1 rounded">Employee@123</code>
                                 </div>
                             </div>
                         </div>
@@ -88,8 +96,8 @@
                         <div class="row g-3">
                             <div class="col-6">
                                 <div class="text-center">
-                                    <i class="fas fa-hand-holding-heart fa-2x text-danger mb-2"></i>
-                                    <small class="d-block">Donate Blood</small>
+                                    <i class="fas fa-user-md fa-2x text-danger mb-2"></i>
+                                    <small class="d-block">Manage Donors</small>
                                 </div>
                             </div>
                             <div class="col-6">
@@ -100,8 +108,8 @@
                             </div>
                             <div class="col-6">
                                 <div class="text-center">
-                                    <i class="fas fa-history fa-2x text-success mb-2"></i>
-                                    <small class="d-block">Track History</small>
+                                    <i class="fas fa-clipboard-list fa-2x text-success mb-2"></i>
+                                    <small class="d-block">Track Records</small>
                                 </div>
                             </div>
                             <div class="col-6">

@@ -1,0 +1,197 @@
+@{
+    ViewData["Title"] = "Employee Dashboard";
+}
+
+<div class="container mb-5">
+    <!-- Welcome Section -->
+    <div class="row mb-5">
+        <div class="col-lg-12">
+            <div class="card bg-gradient-primary text-white shadow-lg">
+                <div class="card-body p-5">
+                    <h1 class="display-4 fw-bold mb-3">
+                        <i class="fas fa-stethoscope"></i> Welcome, @User.Identity?.Name!
+                    </h1>
+                    <p class="lead mb-0">Manage donors and patients to ensure efficient blood bank operations.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="row mb-5">
+        <div class="col-lg-12">
+            <h2 class="h3 fw-bold mb-4">
+                <i class="fas fa-lightning-bolt text-warning"></i> Quick Actions
+            </h2>
+        </div>
+
+        <!-- Register Donor Action -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-custom hover-zoom cursor-pointer" style="border-left: 5px solid #dc3545;">
+                <div class="card-body p-5">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="rounded-circle bg-danger bg-opacity-10 p-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-hand-holding-heart fa-2x text-danger"></i>
+                        </div>
+                        <div class="ms-4">
+                            <h4 class="card-title fw-bold mb-0">Register Donor</h4>
+                            <small class="text-muted">Add new blood donor to the system</small>
+                        </div>
+                    </div>
+                    <p class="card-text text-muted mb-4">
+                        Register a new donor in the blood bank system. Collect donor information including blood group, age, and medical history.
+                    </p>
+                    <a asp-controller="Donor" asp-action="Create" class="btn btn-danger w-100">
+                        <i class="fas fa-plus-circle"></i> Register New Donor
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Patient Action -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-custom hover-zoom cursor-pointer" style="border-left: 5px solid #0d6efd;">
+                <div class="card-body p-5">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="rounded-circle bg-primary bg-opacity-10 p-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-hospital-user fa-2x text-primary"></i>
+                        </div>
+                        <div class="ms-4">
+                            <h4 class="card-title fw-bold mb-0">Register Patient</h4>
+                            <small class="text-muted">Add new patient seeking blood</small>
+                        </div>
+                    </div>
+                    <p class="card-text text-muted mb-4">
+                        Register a new patient who needs blood support. Collect patient information and doctor reference for verification.
+                    </p>
+                    <a asp-controller="Account" asp-action="Register" asp-route-type="patient" class="btn btn-primary w-100">
+                        <i class="fas fa-plus-circle"></i> Register New Patient
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Operations Summary -->
+    <div class="row mb-5">
+        <div class="col-lg-12">
+            <h2 class="h3 fw-bold mb-4">
+                <i class="fas fa-chart-bar text-info"></i> Operations Summary
+            </h2>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-custom">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <small class="text-muted d-block mb-2">Total Donors</small>
+                            <h3 class="fw-bold text-danger mb-0">@ViewBag.TotalDonors ?? 0</h3>
+                        </div>
+                        <i class="fas fa-hand-holding-heart fa-2x text-danger opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-custom">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <small class="text-muted d-block mb-2">Total Patients</small>
+                            <h3 class="fw-bold text-primary mb-0">@ViewBag.TotalPatients ?? 0</h3>
+                        </div>
+                        <i class="fas fa-hospital-user fa-2x text-primary opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-custom">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <small class="text-muted d-block mb-2">Pending Requests</small>
+                            <h3 class="fw-bold text-warning mb-0">@ViewBag.PendingRequests ?? 0</h3>
+                        </div>
+                        <i class="fas fa-clock fa-2x text-warning opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-custom">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <small class="text-muted d-block mb-2">Blood Units Available</small>
+                            <h3 class="fw-bold text-success mb-0">@ViewBag.TotalBloodUnits ?? 0</h3>
+                        </div>
+                        <i class="fas fa-tint fa-2x text-success opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Links -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="h3 fw-bold mb-4">
+                <i class="fas fa-history text-secondary"></i> Quick Links
+            </h2>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <a asp-controller="Admin" asp-action="ManageDonors" class="card h-100 text-decoration-none shadow-custom hover-zoom">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-user-tie fa-2x text-info mb-3"></i>
+                    <h5 class="card-title fw-bold">Manage Donors</h5>
+                    <p class="card-text text-muted small">View and manage all registered donors</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <a asp-controller="Admin" asp-action="BloodRequests" class="card h-100 text-decoration-none shadow-custom hover-zoom">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-list fa-2x text-danger mb-3"></i>
+                    <h5 class="card-title fw-bold">Blood Requests</h5>
+                    <p class="card-text text-muted small">Review and approve blood requests</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <a asp-controller="Admin" asp-action="BloodInventory" class="card h-100 text-decoration-none shadow-custom hover-zoom">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-database fa-2x text-warning mb-3"></i>
+                    <h5 class="card-title fw-bold">Blood Inventory</h5>
+                    <p class="card-text text-muted small">Check blood stock and availability</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .shadow-custom {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .shadow-custom:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+    }
+
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #ff6b6b 0%, #dc3545 100%);
+    }
+</style>

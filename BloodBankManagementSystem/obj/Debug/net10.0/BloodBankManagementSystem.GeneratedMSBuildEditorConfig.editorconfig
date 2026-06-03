@@ -58,6 +58,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQmxvb2RSZXF1ZXN0cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[R:/blood-management-system/BloodBankManagementSystem/Views/Admin/CreateCamp.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ3JlYXRlQ2FtcC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[R:/blood-management-system/BloodBankManagementSystem/Views/Admin/DonationCamps.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRG9uYXRpb25DYW1wcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[R:/blood-management-system/BloodBankManagementSystem/Views/Admin/DonationRecords.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRG9uYXRpb25SZWNvcmRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [R:/blood-management-system/BloodBankManagementSystem/Views/Admin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -66,8 +78,44 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTWFuYWdlRG9ub3JzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[R:/blood-management-system/BloodBankManagementSystem/Views/Admin/ManageUsers.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTWFuYWdlVXNlcnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[R:/blood-management-system/BloodBankManagementSystem/Views/Admin/RecordDonation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUmVjb3JkRG9uYXRpb24uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[R:/blood-management-system/BloodBankManagementSystem/Views/Admin/Reports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUmVwb3J0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[R:/blood-management-system/BloodBankManagementSystem/Views/Donor/BloodAvailability.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9ub3JcQmxvb2RBdmFpbGFiaWxpdHkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[R:/blood-management-system/BloodBankManagementSystem/Views/Donor/DonationHistory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9ub3JcRG9uYXRpb25IaXN0b3J5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [R:/blood-management-system/BloodBankManagementSystem/Views/Donor/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9ub3JcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[R:/blood-management-system/BloodBankManagementSystem/Views/Donor/MyProfile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9ub3JcTXlQcm9maWxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[R:/blood-management-system/BloodBankManagementSystem/Views/Donor/UpcomingCamps.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9ub3JcVXBjb21pbmdDYW1wcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[R:/blood-management-system/BloodBankManagementSystem/Views/Donor/UpdateProfile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9ub3JcVXBkYXRlUHJvZmlsZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[R:/blood-management-system/BloodBankManagementSystem/Views/Employee/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVcRGFzaGJvYXJkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [R:/blood-management-system/BloodBankManagementSystem/Views/Home/About.cshtml]
@@ -86,12 +134,28 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[R:/blood-management-system/BloodBankManagementSystem/Views/Patient/BloodAvailability.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF0aWVudFxCbG9vZEF2YWlsYWJpbGl0eS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [R:/blood-management-system/BloodBankManagementSystem/Views/Patient/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF0aWVudFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[R:/blood-management-system/BloodBankManagementSystem/Views/Patient/MyProfile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF0aWVudFxNeVByb2ZpbGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[R:/blood-management-system/BloodBankManagementSystem/Views/Patient/MyRequests.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF0aWVudFxNeVJlcXVlc3RzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [R:/blood-management-system/BloodBankManagementSystem/Views/Patient/RequestBlood.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF0aWVudFxSZXF1ZXN0Qmxvb2QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[R:/blood-management-system/BloodBankManagementSystem/Views/Patient/SearchDonors.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF0aWVudFxTZWFyY2hEb25vcnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [R:/blood-management-system/BloodBankManagementSystem/Views/Shared/Error.cshtml]

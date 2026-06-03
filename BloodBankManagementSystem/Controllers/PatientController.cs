@@ -9,6 +9,11 @@ namespace BloodBankManagementSystem.Controllers
     [Authorize(Roles = "Patient")]
     public class PatientController : Controller
     {
+        private static readonly HashSet<string> AllowedBloodGroups = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"
+        };
+
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -65,8 +70,16 @@ namespace BloodBankManagementSystem.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RequestBlood(string bloodGroup, int unitsRequired, string? reason, bool isEmergency)
         {
+            if (string.IsNullOrWhiteSpace(bloodGroup) || !AllowedBloodGroups.Contains(bloodGroup) || unitsRequired <= 0)
+            {
+                ModelState.AddModelError(string.Empty, "Please enter a valid blood group and units required.");
+                ViewBag.PatientBloodGroup = bloodGroup;
+                return View();
+            }
+
             var user = await _userManager.GetUserAsync(User);
             var patient = await _context.Patients.FirstOrDefaultAsync(p => p.UserId == user!.Id);
 
@@ -132,13 +145,19 @@ namespace BloodBankManagementSystem.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CancelRequest(int id)
         {
             var user = await _userManager.GetUserAsync(User);
             var patient = await _context.Patients.FirstOrDefaultAsync(p => p.UserId == user!.Id);
 
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
             var request = await _context.BloodRequests
-                .FirstOrDefaultAsync(r => r.RequestId == id && r.PatientId == patient!.PatientId);
+                .FirstOrDefaultAsync(r => r.RequestId == id && r.PatientId == patient.PatientId);
 
             if (request != null && request.Status == "Pending")
             {

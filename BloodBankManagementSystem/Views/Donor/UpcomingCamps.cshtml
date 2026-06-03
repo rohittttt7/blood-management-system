@@ -1,0 +1,33 @@
+@model IEnumerable<BloodBankManagementSystem.Models.DonationCamp>
+@{
+    ViewData["Title"] = "Upcoming Camps";
+}
+
+<h2><i class="fas fa-calendar-alt text-danger"></i> Upcoming Donation Camps</h2>
+<hr />
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No upcoming camps are scheduled.</div>
+}
+else
+{
+    <div class="row g-4">
+        @foreach (var camp in Model)
+        {
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-danger text-white">
+                        <strong>@camp.CampName</strong>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2"><i class="fas fa-map-marker-alt"></i> @camp.Location</p>
+                        <p class="mb-2"><i class="fas fa-calendar"></i> @camp.CampDate.ToString("dd MMM yyyy")</p>
+                        <p class="mb-2"><i class="fas fa-clock"></i> @camp.StartTime.ToString(@"hh\:mm") - @camp.EndTime.ToString(@"hh\:mm")</p>
+                        <p class="mb-0"><i class="fas fa-users"></i> Expected Donors: @camp.ExpectedDonors</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

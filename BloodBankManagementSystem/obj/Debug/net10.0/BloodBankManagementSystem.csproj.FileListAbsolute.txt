@@ -222,7 +222,6 @@ R:\blood-management-system\BloodBankManagementSystem\obj\Debug\net10.0\refint\Bl
 R:\blood-management-system\BloodBankManagementSystem\obj\Debug\net10.0\BloodBankManagementSystem.pdb
 R:\blood-management-system\BloodBankManagementSystem\obj\Debug\net10.0\BloodBankManagementSystem.genruntimeconfig.cache
 R:\blood-management-system\BloodBankManagementSystem\obj\Debug\net10.0\ref\BloodBankManagementSystem.dll
-R:\blood-management-system\BloodBankManagementSystem\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
-R:\blood-management-system\BloodBankManagementSystem\obj\Debug\net10.0\compressed\1w1funm54f-{0}-wq77z5daor-wq77z5daor.gz
 R:\blood-management-system\BloodBankManagementSystem\obj\Debug\net10.0\compressed\1o3xuj5nmj-{0}-bf47nfeq6b-bf47nfeq6b.gz
 R:\blood-management-system\BloodBankManagementSystem\obj\Debug\net10.0\compressed\1haeqyx336-{0}-n2wn7sd3py-n2wn7sd3py.gz
+R:\blood-management-system\BloodBankManagementSystem\obj\Debug\net10.0\compressed\1w1funm54f-{0}-w65dfdcwh4-w65dfdcwh4.gz

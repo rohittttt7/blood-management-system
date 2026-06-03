@@ -60,7 +60,7 @@ using (var scope = app.Services.CreateScope())
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-    string[] roleNames = { "Admin", "Donor", "Patient" };
+    string[] roleNames = { "Admin", "Employee", "Donor", "Patient" };
     foreach (var roleName in roleNames)
     {
         if (!await roleManager.RoleExistsAsync(roleName))
@@ -87,6 +87,26 @@ using (var scope = app.Services.CreateScope())
         if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(admin, "Admin");
+        }
+    }
+
+    var employeeEmail = "employee@bloodbank.com";
+    var employeeUser = await userManager.FindByEmailAsync(employeeEmail);
+    if (employeeUser == null)
+    {
+        var employee = new ApplicationUser
+        {
+            UserName = employeeEmail,
+            Email = employeeEmail,
+            FullName = "System Employee",
+            EmailConfirmed = true,
+            IsActive = true
+        };
+
+        var result = await userManager.CreateAsync(employee, "Employee@123");
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(employee, "Employee");
         }
     }
 }

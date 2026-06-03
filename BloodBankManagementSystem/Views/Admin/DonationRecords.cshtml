@@ -1,0 +1,49 @@
+@model IEnumerable<BloodBankManagementSystem.Models.DonationRecord>
+@{
+    ViewData["Title"] = "Donation Records";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2><i class="fas fa-hand-holding-heart text-danger"></i> Donation Records</h2>
+    <a asp-action="RecordDonation" class="btn btn-success">
+        <i class="fas fa-plus-circle"></i> Record Donation
+    </a>
+</div>
+<hr />
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No donation records found.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-danger">
+                <tr>
+                    <th>Donor</th>
+                    <th>Blood Group</th>
+                    <th>Units</th>
+                    <th>Donation Date</th>
+                    <th>Collected By</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model)
+                {
+                    <tr>
+                        <td>@record.Donor?.User?.FullName</td>
+                        <td><span class="badge bg-danger">@record.BloodGroup</span></td>
+                        <td>@record.UnitsCollected</td>
+                        <td>@record.DonationDate.ToString("dd MMM yyyy HH:mm")</td>
+                        <td>@record.CollectedBy</td>
+                        <td><span class="badge bg-success">@record.Status</span></td>
+                        <td>@record.Remarks</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -13,6 +13,7 @@
             </div>
             <div class="card-body">
                 <form asp-action="RequestBlood" method="post">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
                     <div class="mb-3">
                         <label for="bloodGroup" class="form-label">Blood Group Required</label>
                         <select name="bloodGroup" id="bloodGroup" class="form-select" required>

@@ -1,0 +1,68 @@
+@using BloodBankManagementSystem.Models
+@{
+    ViewData["Title"] = "Record Donation";
+    var donors = ViewBag.Donors as List<Donor> ?? new List<Donor>();
+}
+
+<h2><i class="fas fa-plus-circle text-success"></i> Record New Donation</h2>
+<hr />
+
+@if (!donors.Any())
+{
+    <div class="alert alert-warning">
+        No approved and eligible donors are available currently.
+    </div>
+    <a asp-action="DonationRecords" class="btn btn-secondary">Back to Records</a>
+}
+else
+{
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="RecordDonation" method="post">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Donor</label>
+                        <select name="donorId" class="form-select" required>
+                            <option value="">-- Select Donor --</option>
+                            @foreach (var donor in donors)
+                            {
+                                <option value="@donor.DonorId">@donor.User?.FullName (@donor.BloodGroup)</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Blood Group</label>
+                        <select name="bloodGroup" class="form-select" required>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Units</label>
+                        <input type="number" name="units" min="1" max="5" value="1" class="form-control" required />
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Remarks</label>
+                        <textarea name="remarks" rows="3" class="form-control" placeholder="Optional notes..."></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Save Donation
+                    </button>
+                    <a asp-action="DonationRecords" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+}

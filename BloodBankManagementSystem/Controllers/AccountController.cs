@@ -22,14 +22,35 @@ namespace BloodBankManagementSystem.Controllers
         }
 
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult Register(string? type = null)
         {
+            // type can be "donor" or "patient"
+            if (type == "donor")
+            {
+                ViewBag.RegistrationType = "Donor";
+                ViewBag.DefaultRole = "Donor";
+            }
+            else
+            {
+                ViewBag.RegistrationType = "Patient";
+                ViewBag.DefaultRole = "Patient";
+            }
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model, string? type = null, string? registrationType = null)
         {
+            var resolvedType = (type ?? registrationType ?? string.Empty).Trim().ToLowerInvariant();
+            var isDonorRegistration = resolvedType == "donor";
+
+            ViewBag.RegistrationType = isDonorRegistration ? "Donor" : "Patient";
+            ViewBag.DefaultRole = isDonorRegistration ? "Donor" : "Patient";
+
+            // Enforce role from route/form context so hidden-field tampering or empty values cannot break role assignment.
+            model.Role = isDonorRegistration ? "Donor" : "Patient";
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser
@@ -52,17 +73,32 @@ namespace BloodBankManagementSystem.Controllers
 
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, model.Role!);
+                    var roleAssignResult = await _userManager.AddToRoleAsync(user, model.Role!);
+                    if (!roleAssignResult.Succeeded)
+                    {
+                        await _userManager.DeleteAsync(user);
+                        foreach (var error in roleAssignResult.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
 
-                    // If registering as Donor, create donor profile
+                        return View(model);
+                    }
+
                     if (model.Role == "Donor")
                     {
                         return RedirectToAction("CompleteDonorProfile", new { userId = user.Id });
                     }
-                    // If registering as Patient, create patient profile
-                    else if (model.Role == "Patient")
+
+                    if (model.Role == "Patient")
                     {
                         return RedirectToAction("CompletePatientProfile", new { userId = user.Id });
+                    }
+
+                    if (model.Role == "Employee")
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return RedirectToAction("Index", "Admin");
                     }
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
@@ -86,6 +122,7 @@ namespace BloodBankManagementSystem.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CompleteDonorProfile(string userId, DonorRegistrationViewModel model)
         {
             if (ModelState.IsValid)
@@ -112,7 +149,7 @@ namespace BloodBankManagementSystem.Controllers
                 }
 
                 TempData["Success"] = "Donor registration completed! Please wait for admin approval.";
-                return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Donor");
             }
 
             ViewBag.UserId = userId;
@@ -127,7 +164,8 @@ namespace BloodBankManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CompletePatientProfile(string userId, string bloodGroup, int age, string? medicalCondition)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CompletePatientProfile(string userId, string bloodGroup, int age, string? medicalCondition, string? doctorReference)
         {
             var patient = new Patient
             {
@@ -135,6 +173,7 @@ namespace BloodBankManagementSystem.Controllers
                 BloodGroup = bloodGroup,
                 Age = age,
                 MedicalCondition = medicalCondition,
+                DoctorReference = doctorReference,
                 RegisteredDate = DateTime.Now
             };
 
@@ -148,7 +187,7 @@ namespace BloodBankManagementSystem.Controllers
             }
 
             TempData["Success"] = "Patient registration completed successfully!";
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Patient");
         }
 
         [HttpGet]
@@ -158,6 +197,7 @@ namespace BloodBankManagementSystem.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
@@ -170,12 +210,46 @@ namespace BloodBankManagementSystem.Controllers
 
                 if (result.Succeeded)
                 {
+                    if (string.IsNullOrWhiteSpace(model.Email))
+                    {
+                        ModelState.AddModelError(string.Empty, "Email is required.");
+                        return View(model);
+                    }
+
                     var user = await _userManager.FindByEmailAsync(model.Email);
                     if (user != null && !user.IsActive)
                     {
                         await _signInManager.SignOutAsync();
                         ModelState.AddModelError(string.Empty, "Your account has been deactivated.");
                         return View(model);
+                    }
+
+                        if (user == null)
+                        {
+                            ModelState.AddModelError(string.Empty, "Unable to load the signed-in user.");
+                            return View(model);
+                        }
+
+                    var roles = await _userManager.GetRolesAsync(user);
+                    
+                    if (roles.Contains("Employee"))
+                    {
+                        return RedirectToAction("Dashboard", "Employee");
+                    }
+
+                    if (roles.Contains("Donor"))
+                    {
+                        return RedirectToAction("Index", "Donor");
+                    }
+                    
+                    if (roles.Contains("Admin"))
+                    {
+                        return RedirectToAction("Index", "Admin");
+                    }
+
+                    if (roles.Contains("Patient"))
+                    {
+                        return RedirectToAction("Index", "Patient");
                     }
 
                     return RedirectToAction("Index", "Home");
@@ -188,6 +262,7 @@ namespace BloodBankManagementSystem.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

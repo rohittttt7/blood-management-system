@@ -84,14 +84,29 @@ namespace BloodBankManagementSystem.Controllers
         }
 
         [HttpGet]
-        public IActionResult UpdateProfile()
+        public async Task<IActionResult> UpdateProfile()
         {
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+            var donor = await _context.Donors.FirstOrDefaultAsync(d => d.UserId == user!.Id);
+
+            if (donor == null)
+            {
+                return RedirectToAction("Register", "Account");
+            }
+
+            return View(donor);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateProfile(int age, double weight, string? medicalHistory)
         {
+            if (age < 18 || age > 65 || weight < 50 || weight > 200)
+            {
+                TempData["Error"] = "Please enter a valid age (18-65) and weight (50-200 kg).";
+                return RedirectToAction(nameof(UpdateProfile));
+            }
+
             var user = await _userManager.GetUserAsync(User);
             var donor = await _context.Donors.FirstOrDefaultAsync(d => d.UserId == user!.Id);
 

@@ -1,17 +1,38 @@
 @model BloodBankManagementSystem.Models.ViewModels.RegisterViewModel
 @{
     ViewData["Title"] = "Register";
+    var registrationType = ViewBag.RegistrationType as string ?? "Patient";
+    var defaultRole = ViewBag.DefaultRole as string ?? "Patient";
 }
 
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card shadow">
             <div class="card-header bg-danger text-white">
-                <h3 class="mb-0"><i class="fas fa-user-plus"></i> Register</h3>
+                @if (registrationType == "Donor")
+                {
+                    <h3 class="mb-0"><i class="fas fa-hand-holding-heart"></i> Donor Registration</h3>
+                }
+                else
+                {
+                    <h3 class="mb-0"><i class="fas fa-hospital-user"></i> Patient Registration</h3>
+                }
             </div>
             <div class="card-body">
-                <form asp-action="Register" method="post">
+                <div class="alert alert-info mb-4">
+                    @if (registrationType == "Donor")
+                    {
+                        <p><i class="fas fa-info-circle"></i> Register as a donor to give blood and manage your donor profile.</p>
+                    }
+                    else
+                    {
+                        <p><i class="fas fa-info-circle"></i> Register as a patient to request blood support when needed.</p>
+                    }
+                </div>
+
+                <form asp-action="Register" asp-route-type="@registrationType.ToLowerInvariant()" method="post">
                     <div asp-validation-summary="All" class="text-danger"></div>
+                    <input type="hidden" name="registrationType" value="@registrationType" />
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -94,19 +115,28 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label asp-for="Role" class="form-label"></label>
-                            <select asp-for="Role" class="form-select">
-                                <option value="">Select Role</option>
-                                <option value="Donor">Blood Donor</option>
-                                <option value="Patient">Patient</option>
-                            </select>
-                            <span asp-validation-for="Role" class="text-danger"></span>
+                            <label class="form-label">Account Type</label>
+                            <input asp-for="Role" type="hidden" value="@defaultRole" />
+                            @if (registrationType == "Donor")
+                            {
+                                <div class="form-control bg-light">Donor Account</div>
+                                <small class="text-muted">Donor profile for blood donation and history.</small>
+                            }
+                            else
+                            {
+                                <div class="form-control bg-light">Patient Account</div>
+                                <small class="text-muted">Patient account for blood requests.</small>
+                            }
                         </div>
                     </div>
 
                     <div class="d-grid gap-2">
+                        @{
+                            string buttonText = registrationType == "Donor" ? "Register as Donor" : "Register as Patient";
+                            string buttonIcon = registrationType == "Donor" ? "fas fa-hand-holding-heart" : "fas fa-hospital-user";
+                        }
                         <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-user-plus"></i> Register
+                            <i class="@buttonIcon"></i> @buttonText
                         </button>
                     </div>
                 </form>

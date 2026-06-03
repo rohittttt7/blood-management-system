@@ -23,6 +23,9 @@ namespace BloodBankManagementSystem.Models
 
         public string? MedicalCondition { get; set; }
 
+        [StringLength(255)]
+        public string? DoctorReference { get; set; }
+
         public DateTime RegisteredDate { get; set; } = DateTime.Now;
     }
 }

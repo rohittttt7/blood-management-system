@@ -1,0 +1,53 @@
+@model IEnumerable<BloodBankManagementSystem.Models.DonationCamp>
+@{
+    ViewData["Title"] = "Donation Camps";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2><i class="fas fa-calendar-alt text-danger"></i> Donation Camps</h2>
+    <a asp-action="CreateCamp" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Create Camp
+    </a>
+</div>
+<hr />
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No donation camps found.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-danger">
+                <tr>
+                    <th>Camp Name</th>
+                    <th>Location</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Expected Donors</th>
+                    <th>Actual Donors</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var camp in Model.OrderBy(c => c.CampDate))
+                {
+                    <tr>
+                        <td>@camp.CampName</td>
+                        <td>@camp.Location</td>
+                        <td>@camp.CampDate.ToString("dd MMM yyyy")</td>
+                        <td>@camp.StartTime.ToString(@"hh\:mm") - @camp.EndTime.ToString(@"hh\:mm")</td>
+                        <td>@camp.ExpectedDonors</td>
+                        <td>@camp.ActualDonors</td>
+                        <td>
+                            <span class="badge @(camp.Status == "Scheduled" ? "bg-primary" : camp.Status == "Completed" ? "bg-success" : "bg-secondary")">
+                                @camp.Status
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

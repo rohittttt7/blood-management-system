@@ -51,6 +51,6 @@ namespace BloodBankManagementSystem.Models.ViewModels
 
         [Required]
         [Display(Name = "Register As")]
-        public string? Role { get; set; } // Donor, Patient
+        public string? Role { get; set; } // Donor, Patient, Employee
     }
 }

@@ -1,0 +1,119 @@
+@model dynamic
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<h2><i class="fas fa-chart-bar text-danger"></i> Reports</h2>
+<hr />
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h6>Total Donations</h6>
+                <h3>@Model.TotalDonations</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <h6>Total Requests</h6>
+                <h3>@Model.TotalRequests</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h6>Total Distributions</h6>
+                <h3>@Model.TotalDistributions</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header bg-danger text-white">
+                Blood Inventory Snapshot
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>Blood Group</th>
+                                <th>Units</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var bg in Model.BloodGroups)
+                            {
+                                <tr>
+                                    <td><span class="badge bg-danger">@bg.BloodType</span></td>
+                                    <td>@bg.AvailableUnits</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header bg-primary text-white">Recent Donations</div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    @foreach (var donation in Model.RecentDonations)
+                    {
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>@donation.Donor?.User?.FullName (@donation.BloodGroup)</span>
+                            <span>@donation.UnitsCollected unit(s)</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">Recent Blood Requests</div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Blood Group</th>
+                                <th>Units</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var request in Model.RecentRequests)
+                            {
+                                <tr>
+                                    <td>@request.Patient?.User?.FullName</td>
+                                    <td><span class="badge bg-danger">@request.BloodGroup</span></td>
+                                    <td>@request.UnitsRequired</td>
+                                    <td>
+                                        <span class="badge @(request.Status == "Approved" ? "bg-success" : request.Status == "Pending" ? "bg-warning" : "bg-danger")">
+                                            @request.Status
+                                        </span>
+                                    </td>
+                                    <td>@request.RequestDate.ToString("dd MMM yyyy")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
