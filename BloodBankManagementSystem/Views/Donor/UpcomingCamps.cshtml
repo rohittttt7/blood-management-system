@@ -1,6 +1,7 @@
 @model IEnumerable<BloodBankManagementSystem.Models.DonationCamp>
 @{
     ViewData["Title"] = "Upcoming Camps";
+    var registeredIds = ViewBag.RegisteredCampIds as List<int> ?? new List<int>();
 }
 
 <h2><i class="fas fa-calendar-alt text-danger"></i> Upcoming Donation Camps</h2>
@@ -25,6 +26,21 @@ else
                         <p class="mb-2"><i class="fas fa-calendar"></i> @camp.CampDate.ToString("dd MMM yyyy")</p>
                         <p class="mb-2"><i class="fas fa-clock"></i> @camp.StartTime.ToString(@"hh\:mm") - @camp.EndTime.ToString(@"hh\:mm")</p>
                         <p class="mb-0"><i class="fas fa-users"></i> Expected Donors: @camp.ExpectedDonors</p>
+                    </div>
+                    <div class="card-footer bg-white border-0 pb-3">
+                        @if (registeredIds.Contains(camp.CampId))
+                        {
+                            <span class="badge bg-success"><i class="fas fa-check-circle"></i> You are registered</span>
+                        }
+                        else
+                        {
+                            <form asp-action="RegisterForCamp" method="post" onsubmit="return confirm('Register for this donation camp?');">
+                                <input type="hidden" name="campId" value="@camp.CampId" />
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-hand-holding-heart"></i> Register for this Camp
+                                </button>
+                            </form>
+                        }
                     </div>
                 </div>
             </div>

@@ -51,16 +51,16 @@
         </div>
 
         <div class="col-xl-3 col-md-6">
-            <div class="dashboard-card bg-success text-white">
+            <a asp-action="ManagePatients" class="dashboard-card bg-success text-white d-block text-decoration-none">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h6 class="text-uppercase mb-2">Total Patients</h6>
                         <h2 class="display-5 fw-bold mb-0">@totalPatients</h2>
-                        <small>Registered patients</small>
+                        <small>Registered patients <i class="fas fa-arrow-right ms-1"></i></small>
                     </div>
                     <i class="fas fa-user-injured fa-3x opacity-50"></i>
                 </div>
-            </div>
+            </a>
         </div>
 
         <div class="col-xl-3 col-md-6">
@@ -114,6 +114,15 @@
                                 <small class="text-muted ms-2">Review and approve donor registrations</small>
                             </div>
                             <span class="badge bg-warning text-dark rounded-pill">@pendingDonors Pending</span>
+                        </a>
+
+                        <a asp-action="ManagePatients" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-user-injured text-success me-3"></i>
+                                <strong>Patient Records</strong>
+                                <small class="text-muted ms-2">View registered patients and their requests</small>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">@totalPatients Patients</span>
                         </a>
 
                         <a asp-action="BloodRequests" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">

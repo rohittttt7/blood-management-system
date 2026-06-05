@@ -1,6 +1,7 @@
 @model IEnumerable<BloodBankManagementSystem.Models.DonationCamp>
 @{
     ViewData["Title"] = "Donation Camps";
+    var registrationCounts = ViewBag.RegistrationCounts as Dictionary<int, int> ?? new Dictionary<int, int>();
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -26,6 +27,7 @@ else
                     <th>Date</th>
                     <th>Time</th>
                     <th>Expected Donors</th>
+                    <th>Registered Donors</th>
                     <th>Actual Donors</th>
                     <th>Status</th>
                 </tr>
@@ -39,6 +41,11 @@ else
                         <td>@camp.CampDate.ToString("dd MMM yyyy")</td>
                         <td>@camp.StartTime.ToString(@"hh\:mm") - @camp.EndTime.ToString(@"hh\:mm")</td>
                         <td>@camp.ExpectedDonors</td>
+                        <td>
+                            <span class="badge bg-info">
+                                @(registrationCounts.TryGetValue(camp.CampId, out var rc) ? rc : 0) enrolled
+                            </span>
+                        </td>
                         <td>@camp.ActualDonors</td>
                         <td>
                             <span class="badge @(camp.Status == "Scheduled" ? "bg-primary" : camp.Status == "Completed" ? "bg-success" : "bg-secondary")">

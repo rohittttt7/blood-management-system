@@ -57,6 +57,10 @@ app.MapControllerRoute(
 // Seed roles and admin user
 using (var scope = app.Services.CreateScope())
 {
+    // Ensure the database exists and all migrations (incl. seeded blood groups) are applied.
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
@@ -89,6 +93,12 @@ using (var scope = app.Services.CreateScope())
             await userManager.AddToRoleAsync(admin, "Admin");
         }
     }
+    else if (!adminUser.IsActive)
+    {
+        // Safeguard: never let the built-in admin stay locked out (e.g. accidentally deactivated).
+        adminUser.IsActive = true;
+        await userManager.UpdateAsync(adminUser);
+    }
 
     var employeeEmail = "employee@bloodbank.com";
     var employeeUser = await userManager.FindByEmailAsync(employeeEmail);
@@ -108,6 +118,11 @@ using (var scope = app.Services.CreateScope())
         {
             await userManager.AddToRoleAsync(employee, "Employee");
         }
+    }
+    else if (!employeeUser.IsActive)
+    {
+        employeeUser.IsActive = true;
+        await userManager.UpdateAsync(employeeUser);
     }
 }
 

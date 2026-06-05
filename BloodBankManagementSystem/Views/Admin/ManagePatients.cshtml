@@ -1,0 +1,62 @@
+@model IEnumerable<BloodBankManagementSystem.Models.Patient>
+@{
+    ViewData["Title"] = "Patient Records";
+    var requestCounts = ViewBag.RequestCounts as Dictionary<int, int> ?? new Dictionary<int, int>();
+    var pendingCounts = ViewBag.PendingCounts as Dictionary<int, int> ?? new Dictionary<int, int>();
+}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <h2><i class="fas fa-user-injured"></i> Patient Records</h2>
+    <a asp-action="BloodRequests" class="btn btn-danger">
+        <i class="fas fa-file-medical"></i> Go to Blood Requests
+    </a>
+</div>
+<p class="text-muted">All registered patients. Patients can submit blood requests, which you approve under <strong>Blood Requests</strong>.</p>
+<hr />
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-danger">
+            <tr>
+                <th>Patient Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Blood Group</th>
+                <th>Age</th>
+                <th>City</th>
+                <th>Registered On</th>
+                <th>Requests</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var patient in Model)
+            {
+                var total = requestCounts.TryGetValue(patient.PatientId, out var t) ? t : 0;
+                var pending = pendingCounts.TryGetValue(patient.PatientId, out var p) ? p : 0;
+                <tr>
+                    <td>@patient.User?.FullName</td>
+                    <td>@patient.User?.Email</td>
+                    <td>@patient.User?.PhoneNumber</td>
+                    <td><span class="badge bg-danger">@patient.BloodGroup</span></td>
+                    <td>@patient.Age</td>
+                    <td>@patient.User?.City</td>
+                    <td>@patient.RegisteredDate.ToString("dd MMM yyyy")</td>
+                    <td>
+                        <span class="badge bg-primary">@total total</span>
+                        @if (pending > 0)
+                        {
+                            <span class="badge bg-warning text-dark">@pending pending</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> No patients have registered yet.
+    </div>
+}

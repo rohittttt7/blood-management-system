@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using BloodBankManagementSystem.Models;
 using BloodBankManagementSystem.Models.ViewModels;
 
@@ -7,6 +8,11 @@ namespace BloodBankManagementSystem.Controllers
 {
     public class AccountController : Controller
     {
+        private static readonly HashSet<string> AllowedBloodGroups = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"
+        };
+
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext _context;
@@ -50,6 +56,8 @@ namespace BloodBankManagementSystem.Controllers
 
             // Enforce role from route/form context so hidden-field tampering or empty values cannot break role assignment.
             model.Role = isDonorRegistration ? "Donor" : "Patient";
+            // Role is set by the server, not the user, so drop any validation error the hidden field produced.
+            ModelState.Remove(nameof(model.Role));
 
             if (ModelState.IsValid)
             {
@@ -125,31 +133,37 @@ namespace BloodBankManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CompleteDonorProfile(string userId, DonorRegistrationViewModel model)
         {
-            if (ModelState.IsValid)
+            var user = string.IsNullOrWhiteSpace(userId) ? null : await _userManager.FindByIdAsync(userId);
+            if (user == null)
             {
-                var donor = new Donor
-                {
-                    UserId = userId,
-                    BloodGroup = model.BloodGroup,
-                    Age = model.Age,
-                    Weight = model.Weight,
-                    MedicalHistory = model.MedicalHistory,
-                    IsEligible = true,
-                    Status = "Pending",
-                    RegisteredDate = DateTime.Now
-                };
+                ModelState.AddModelError(string.Empty, "Registration session expired. Please register again.");
+            }
 
-                _context.Donors.Add(donor);
-                await _context.SaveChangesAsync();
-
-                var user = await _userManager.FindByIdAsync(userId);
-                if (user != null)
+            if (ModelState.IsValid && user != null)
+            {
+                // Avoid creating a duplicate profile if this step is submitted twice.
+                if (!await _context.Donors.AnyAsync(d => d.UserId == userId))
                 {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    var donor = new Donor
+                    {
+                        UserId = userId,
+                        BloodGroup = model.BloodGroup,
+                        Age = model.Age,
+                        Weight = model.Weight,
+                        MedicalHistory = model.MedicalHistory,
+                        IsEligible = true,
+                        Status = "Pending",
+                        RegisteredDate = DateTime.Now
+                    };
+
+                    _context.Donors.Add(donor);
+                    await _context.SaveChangesAsync();
                 }
 
+                await _signInManager.SignInAsync(user, isPersistent: false);
+
                 TempData["Success"] = "Donor registration completed! Please wait for admin approval.";
-            return RedirectToAction("Index", "Donor");
+                return RedirectToAction("Index", "Donor");
             }
 
             ViewBag.UserId = userId;
@@ -167,24 +181,39 @@ namespace BloodBankManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CompletePatientProfile(string userId, string bloodGroup, int age, string? medicalCondition, string? doctorReference)
         {
-            var patient = new Patient
-            {
-                UserId = userId,
-                BloodGroup = bloodGroup,
-                Age = age,
-                MedicalCondition = medicalCondition,
-                DoctorReference = doctorReference,
-                RegisteredDate = DateTime.Now
-            };
+            ViewBag.UserId = userId;
 
-            _context.Patients.Add(patient);
-            await _context.SaveChangesAsync();
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user != null)
+            var user = string.IsNullOrWhiteSpace(userId) ? null : await _userManager.FindByIdAsync(userId);
+            if (user == null)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                ModelState.AddModelError(string.Empty, "Registration session expired. Please register again.");
+                return View();
             }
+
+            if (string.IsNullOrWhiteSpace(bloodGroup) || !AllowedBloodGroups.Contains(bloodGroup) || age < 1 || age > 120)
+            {
+                ModelState.AddModelError(string.Empty, "Please select a valid blood group and enter a valid age.");
+                return View();
+            }
+
+            // Avoid creating a duplicate profile if this step is submitted twice.
+            if (!await _context.Patients.AnyAsync(p => p.UserId == userId))
+            {
+                var patient = new Patient
+                {
+                    UserId = userId,
+                    BloodGroup = bloodGroup,
+                    Age = age,
+                    MedicalCondition = medicalCondition,
+                    DoctorReference = doctorReference,
+                    RegisteredDate = DateTime.Now
+                };
+
+                _context.Patients.Add(patient);
+                await _context.SaveChangesAsync();
+            }
+
+            await _signInManager.SignInAsync(user, isPersistent: false);
 
             TempData["Success"] = "Patient registration completed successfully!";
             return RedirectToAction("Index", "Patient");

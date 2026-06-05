@@ -17,6 +17,7 @@ namespace BloodBankManagementSystem.Models
         public DbSet<BloodRequest> BloodRequests { get; set; }
         public DbSet<BloodDistribution> BloodDistributions { get; set; }
         public DbSet<DonationCamp> DonationCamps { get; set; }
+        public DbSet<CampRegistration> CampRegistrations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

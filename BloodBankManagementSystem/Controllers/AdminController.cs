@@ -70,6 +70,29 @@ namespace BloodBankManagementSystem.Controllers
             return RedirectToAction(nameof(ManageDonors));
         }
 
+        // Patient Management (real-life: patients don't need approval, but admin must see who registered)
+        public async Task<IActionResult> ManagePatients()
+        {
+            var patients = await _context.Patients
+                .Include(p => p.User)
+                .OrderByDescending(p => p.RegisteredDate)
+                .ToListAsync();
+
+            // How many blood requests each patient has made, so admin sees activity at a glance.
+            ViewBag.RequestCounts = await _context.BloodRequests
+                .GroupBy(r => r.PatientId)
+                .Select(g => new { PatientId = g.Key, Count = g.Count() })
+                .ToDictionaryAsync(x => x.PatientId, x => x.Count);
+
+            ViewBag.PendingCounts = await _context.BloodRequests
+                .Where(r => r.Status == "Pending")
+                .GroupBy(r => r.PatientId)
+                .Select(g => new { PatientId = g.Key, Count = g.Count() })
+                .ToDictionaryAsync(x => x.PatientId, x => x.Count);
+
+            return View(patients);
+        }
+
         // Blood Inventory Management
         public async Task<IActionResult> BloodInventory()
         {
@@ -227,6 +250,13 @@ namespace BloodBankManagementSystem.Controllers
             var donor = await _context.Donors.FindAsync(donorId);
             if (donor != null)
             {
+                // Enforce the 90-day gap: block a donation if the donor isn't eligible yet.
+                if (donor.NextEligibleDate.HasValue && donor.NextEligibleDate.Value.Date > DateTime.Today)
+                {
+                    TempData["Error"] = $"This donor is not eligible until {donor.NextEligibleDate.Value:dd MMM yyyy} (90-day gap between donations).";
+                    return RedirectToAction(nameof(RecordDonation));
+                }
+
                 // Create donation record
                 var donation = new DonationRecord
                 {
@@ -267,7 +297,16 @@ namespace BloodBankManagementSystem.Controllers
         // Donation Camps
         public async Task<IActionResult> DonationCamps()
         {
-            var camps = await _context.DonationCamps.ToListAsync();
+            var camps = await _context.DonationCamps
+                .OrderByDescending(c => c.CampDate)
+                .ToListAsync();
+
+            // How many donors have enrolled in each camp.
+            ViewBag.RegistrationCounts = await _context.CampRegistrations
+                .GroupBy(r => r.CampId)
+                .Select(g => new { CampId = g.Key, Count = g.Count() })
+                .ToDictionaryAsync(x => x.CampId, x => x.Count);
+
             return View(camps);
         }
 
@@ -313,6 +352,13 @@ namespace BloodBankManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleUserStatus(string userId)
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser != null && currentUser.Id == userId)
+            {
+                TempData["Error"] = "You cannot deactivate your own account.";
+                return RedirectToAction(nameof(ManageUsers));
+            }
+
             var user = await _userManager.FindByIdAsync(userId);
             if (user != null)
             {

@@ -69,12 +69,70 @@ namespace BloodBankManagementSystem.Controllers
 
         public async Task<IActionResult> UpcomingCamps()
         {
+            var user = await _userManager.GetUserAsync(User);
+            var donor = await _context.Donors.FirstOrDefaultAsync(d => d.UserId == user!.Id);
+
+            // Compare by date only (DateTime.Today, not Now) so a camp scheduled for TODAY
+            // isn't hidden just because its midnight timestamp is earlier than the current time.
             var camps = await _context.DonationCamps
-                .Where(c => c.CampDate >= DateTime.Now && c.Status == "Scheduled")
+                .Where(c => c.CampDate >= DateTime.Today && c.Status == "Scheduled")
                 .OrderBy(c => c.CampDate)
                 .ToListAsync();
 
+            // Tell the view which of these camps the donor has already enrolled in.
+            ViewBag.RegisteredCampIds = donor == null
+                ? new List<int>()
+                : await _context.CampRegistrations
+                    .Where(r => r.DonorId == donor.DonorId)
+                    .Select(r => r.CampId)
+                    .ToListAsync();
+
             return View(camps);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegisterForCamp(int campId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var donor = await _context.Donors.FirstOrDefaultAsync(d => d.UserId == user!.Id);
+
+            if (donor == null)
+            {
+                return RedirectToAction("Register", "Account");
+            }
+
+            if (donor.Status != "Approved")
+            {
+                TempData["Error"] = "Your donor profile must be approved before you can enroll in a camp.";
+                return RedirectToAction(nameof(UpcomingCamps));
+            }
+
+            var camp = await _context.DonationCamps.FirstOrDefaultAsync(c => c.CampId == campId);
+            if (camp == null || camp.Status != "Scheduled" || camp.CampDate < DateTime.Today)
+            {
+                TempData["Error"] = "This camp is not available for registration.";
+                return RedirectToAction(nameof(UpcomingCamps));
+            }
+
+            var alreadyRegistered = await _context.CampRegistrations
+                .AnyAsync(r => r.CampId == campId && r.DonorId == donor.DonorId);
+            if (alreadyRegistered)
+            {
+                TempData["Error"] = "You are already registered for this camp.";
+                return RedirectToAction(nameof(UpcomingCamps));
+            }
+
+            _context.CampRegistrations.Add(new CampRegistration
+            {
+                CampId = campId,
+                DonorId = donor.DonorId,
+                RegisteredDate = DateTime.Now
+            });
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "You have successfully registered for the camp!";
+            return RedirectToAction(nameof(UpcomingCamps));
         }
 
         public async Task<IActionResult> BloodAvailability()
